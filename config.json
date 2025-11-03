@@ -38,6 +38,17 @@
         "How many people are there in your family?",
         "What's your family's name?"
       ]
+    },
+    "4": {
+      "title": "Sở Thích",
+      "questions": [
+        "What's your favorite color?",
+        "What's your favorite food?",
+        "What's your favorite animal?",
+        "What's your favorite sport?",
+        "What's your favorite movie?",
+        "What's your favorite book?"
+      ]
     }
   },
   "settings": {

@@ -1,36 +1,6 @@
-const lessons = {
-  1: {
-    title: "BẢN THÂN",
-    questions: [
-      "What's your name?",
-      "How old are you?",
-      "Where are you from?",
-      "Where do you live?",
-      "What do you do for a living?",
-      "Where do you work?",
-    ],
-  },
-  2: {
-    title: "CÔNG VIỆC",
-    questions: [
-      "Do you work or study?",
-      "What do you do for a living?",
-      "Where do you work?",
-      "What's your department?",
-      "How many people are there in your department?",
-      "Are your colleagues friendly?",
-      "Is your boss easy-going?",
-      "What do you do at work?",
-      "How many days off do you have a week?",
-      "What days do you work?",
-      "What time do you start work?",
-      "What time do you get off work?",
-      "Do you work the night shift?",
-      "How far is it from your house to your workplace?",
-      "How long does it take you to get to your workplace?",
-    ],
-  },
-};
+let lessons = {};
+let config = {};
+let settings = {};
 
 let currentLesson = null;
 let currentQuestionIndex = 0;
@@ -60,6 +30,44 @@ const restartBtn = document.getElementById("restartBtn");
 const voiceSelect = document.getElementById("voiceSelect");
 const speedControl = document.getElementById("speedControl");
 const speedValue = document.getElementById("speedValue");
+
+// Load config from JSON file
+async function loadConfig() {
+  try {
+    const response = await fetch("./config.json");
+    if (!response.ok) {
+      throw new Error("Failed to load config.json");
+    }
+    config = await response.json();
+    lessons = config.lessons;
+    settings = config.settings || {
+      timerDuration: 50,
+      defaultSpeed: 1.0,
+      minSpeed: 0.5,
+      maxSpeed: 2.0,
+      speedStep: 0.1,
+    };
+
+    // Initialize timer duration
+    timeRemaining = settings.timerDuration;
+    timerValue.textContent = timeRemaining.toString();
+
+    // Initialize speed control from config
+    speedControl.min = settings.minSpeed;
+    speedControl.max = settings.maxSpeed;
+    speedControl.step = settings.speedStep;
+    speedControl.value = settings.defaultSpeed;
+    speedValue.textContent = settings.defaultSpeed + "x";
+
+    console.log("Config loaded successfully");
+  } catch (error) {
+    console.error("Error loading config:", error);
+    alert("Không thể tải cấu hình. Vui lòng kiểm tra file config.json");
+  }
+}
+
+// Load config on page load
+loadConfig();
 
 // Load and prioritize voices
 function loadVoices() {
@@ -135,6 +143,10 @@ lessonBtns.forEach((btn) => {
 });
 
 function selectLesson(lessonNum) {
+  if (!lessons || !lessons[lessonNum]) {
+    alert("Cấu hình chưa được tải. Vui lòng đợi...");
+    return;
+  }
   currentLesson = lessons[lessonNum];
   currentQuestionIndex = 0;
 
@@ -155,12 +167,12 @@ function resetPractice() {
   synth.cancel();
   isRunning = false;
   isPaused = false;
-  timeRemaining = 50;
+  timeRemaining = settings.timerDuration || 50;
   currentQuestionIndex = 0;
 
   questionText.textContent = "Nhấn Start để bắt đầu";
   questionNumber.textContent = "";
-  timerValue.textContent = "50";
+  timerValue.textContent = timeRemaining.toString();
   timerValue.classList.remove("warning");
   statusIndicator.style.display = "none";
   completionMessage.style.display = "none";
@@ -173,6 +185,9 @@ function resetPractice() {
 }
 
 function updateProgress() {
+  if (!currentLesson || !currentLesson.questions) {
+    return;
+  }
   const total = currentLesson.questions.length;
   const current = currentQuestionIndex;
   const percentage = (current / total) * 100;
@@ -230,7 +245,7 @@ function showQuestion() {
 }
 
 function startTimer() {
-  timeRemaining = 50;
+  timeRemaining = settings.timerDuration || 50;
   timerValue.textContent = timeRemaining;
   timerValue.classList.remove("warning");
 

@@ -1,0 +1,43 @@
+{
+  "lessons": {
+    "1": {
+      "title": "BẢN THÂN",
+      "questions": [
+        "What's your name?",
+        "How old are you?",
+        "Where are you from?",
+        "Where do you live?",
+        "What do you do for a living?",
+        "Where do you work?"
+      ]
+    },
+    "2": {
+      "title": "CÔNG VIỆC",
+      "questions": [
+        "Do you work or study?",
+        "What do you do for a living?",
+        "Where do you work?",
+        "What's your department?",
+        "How many people are there in your department?",
+        "Are your colleagues friendly?",
+        "Is your boss easy-going?",
+        "What do you do at work?",
+        "How many days off do you have a week?",
+        "What days do you work?",
+        "What time do you start work?",
+        "What time do you get off work?",
+        "Do you work the night shift?",
+        "How far is it from your house to your workplace?",
+        "How long does it take you to get to your workplace?"
+      ]
+    }
+  },
+  "settings": {
+    "timerDuration": 50,
+    "defaultSpeed": 1.0,
+    "minSpeed": 0.5,
+    "maxSpeed": 2.0,
+    "speedStep": 0.1
+  }
+}
+

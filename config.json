@@ -49,6 +49,17 @@
         "What's your favorite movie?",
         "What's your favorite book?"
       ]
+    },
+    "5": {
+      "title": "DI CHUYỂN",
+      "questions": [
+        "How do you usually go to work?",
+        "How do you usually go to school?",
+        "How do you usually go to the market?",
+        "How do you usually go to the hospital?",
+        "How do you usually go to the park?",
+        "How do you usually go to the library?"
+      ]
     }
   },
   "settings": {

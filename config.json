@@ -7,8 +7,18 @@
         "How old are you?",
         "Where are you from?",
         "Where do you live?",
+        "What's your hometown?",
         "What do you do for a living?",
-        "Where do you work?"
+        "Where do you work?",
+        "What are your hobbies?",
+        "Do you like traveling?",
+        "Where do you want to travel to?",
+        "Why do you want to travel there?",
+        "Who do you want to travel with?",
+        "How often do you travel?",
+        "Do you like watching movies?",
+        "What kind of movies do you like?",
+        "What do you like to do when you have free time?"
       ]
     },
     "2": {
@@ -34,14 +44,36 @@
     "3": {
       "title": "GIA ĐÌNH",
       "questions": [
-        "Do you have a family?",
-        "How many people are there in your family?",
-        "What's your family's name?"
+        "Are you married?",
+        "Do you live with your parents?",
+        "How many children do you have?",
+        "How old is your daughter?",
+        "What’s her name?",
+        "What class is she in?",
+        "What school does she go to?",
+        "What does she look like?",
+        "Is she tall?",
+        "How tall is she?",
+        "What does she like to do?",
+        "What’s she like?",
+        "How about your husband - what’s his name?",
+        "How old is he?",
+        "What does he do for a living?",
+        "What does he look like?",
+        "Is he tall?",
+        "How tall is he?",
+        "How much does he weigh?",
+        "What’s he like?",
+        "Is he gentle?",
+        "What are his hobbies?",
+        "How many siblings do you have?",
+        "Do you often visit your parents?",
+        "How often do you go to your hometown?"
       ]
     }
   },
   "settings": {
-    "timerDuration": 35,
+    "timerDuration": 40,
     "defaultSpeed": 1.0,
     "minSpeed": 0.5,
     "maxSpeed": 2.0,

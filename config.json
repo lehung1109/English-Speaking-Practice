@@ -38,28 +38,6 @@
         "How many people are there in your family?",
         "What's your family's name?"
       ]
-    },
-    "4": {
-      "title": "Sở Thích",
-      "questions": [
-        "What's your favorite color?",
-        "What's your favorite food?",
-        "What's your favorite animal?",
-        "What's your favorite sport?",
-        "What's your favorite movie?",
-        "What's your favorite book?"
-      ]
-    },
-    "5": {
-      "title": "DI CHUYỂN",
-      "questions": [
-        "How do you usually go to work?",
-        "How do you usually go to school?",
-        "How do you usually go to the market?",
-        "How do you usually go to the hospital?",
-        "How do you usually go to the park?",
-        "How do you usually go to the library?"
-      ]
     }
   },
   "settings": {

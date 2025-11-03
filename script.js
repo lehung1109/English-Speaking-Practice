@@ -14,7 +14,7 @@ let sortedVoices = [];
 let currentUtterance = null;
 
 // Elements
-const lessonBtns = document.querySelectorAll(".lesson-btn");
+const lessonSelector = document.getElementById("lessonSelector");
 const practiceArea = document.querySelector(".practice-area");
 const questionNumber = document.getElementById("questionNumber");
 const questionText = document.getElementById("questionText");
@@ -59,11 +59,43 @@ async function loadConfig() {
     speedControl.value = settings.defaultSpeed;
     speedValue.textContent = settings.defaultSpeed + "x";
 
+    // Render lesson buttons dynamically
+    renderLessonButtons();
+
     console.log("Config loaded successfully");
   } catch (error) {
     console.error("Error loading config:", error);
     alert("Không thể tải cấu hình. Vui lòng kiểm tra file config.json");
   }
+}
+
+// Render lesson buttons from config
+function renderLessonButtons() {
+  if (!lessons || !lessonSelector) {
+    return;
+  }
+
+  lessonSelector.innerHTML = "";
+
+  // Get lesson numbers and sort them
+  const lessonNumbers = Object.keys(lessons).sort((a, b) => parseInt(a) - parseInt(b));
+
+  lessonNumbers.forEach((lessonNum) => {
+    const lesson = lessons[lessonNum];
+    const questionCount = lesson.questions ? lesson.questions.length : 0;
+    
+    const button = document.createElement("button");
+    button.className = "lesson-btn";
+    button.dataset.lesson = lessonNum;
+    
+    // Add emoji based on lesson number (or you can add emoji field to config.json later)
+    const emojis = ["📝", "💼", "👨‍👩‍👧‍👦", "🎓", "🏠", "🍔", "🎮", "✈️"];
+    const emoji = emojis[parseInt(lessonNum) - 1] || "📚";
+    
+    button.innerHTML = `${emoji} BÀI ${lessonNum}: ${lesson.title}<br /><small>(${questionCount} câu hỏi)</small>`;
+    
+    lessonSelector.appendChild(button);
+  });
 }
 
 // Load config on page load
@@ -134,12 +166,13 @@ speedControl.addEventListener("input", (e) => {
   speedValue.textContent = e.target.value + "x";
 });
 
-// Lesson selection
-lessonBtns.forEach((btn) => {
-  btn.addEventListener("click", () => {
+// Lesson selection - using event delegation for dynamically created buttons
+lessonSelector.addEventListener("click", (e) => {
+  const btn = e.target.closest(".lesson-btn");
+  if (btn) {
     const lessonNum = parseInt(btn.dataset.lesson);
     selectLesson(lessonNum);
-  });
+  }
 });
 
 function selectLesson(lessonNum) {
@@ -150,6 +183,8 @@ function selectLesson(lessonNum) {
   currentLesson = lessons[lessonNum];
   currentQuestionIndex = 0;
 
+  // Update active state for lesson buttons
+  const lessonBtns = document.querySelectorAll(".lesson-btn");
   lessonBtns.forEach((btn) => {
     btn.classList.toggle(
       "active",

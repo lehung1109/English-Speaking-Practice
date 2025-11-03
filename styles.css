@@ -79,6 +79,7 @@ h1 {
 .lesson-btn {
   flex: 1;
   min-width: 200px;
+  max-width: 33%;
   padding: 20px;
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   color: white;

@@ -30,10 +30,18 @@
         "How far is it from your house to your workplace?",
         "How long does it take you to get to your workplace?"
       ]
+    },
+    "3": {
+      "title": "GIA ĐÌNH",
+      "questions": [
+        "Do you have a family?",
+        "How many people are there in your family?",
+        "What's your family's name?"
+      ]
     }
   },
   "settings": {
-    "timerDuration": 50,
+    "timerDuration": 35,
     "defaultSpeed": 1.0,
     "minSpeed": 0.5,
     "maxSpeed": 2.0,

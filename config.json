@@ -73,7 +73,7 @@
     }
   },
   "settings": {
-    "timerDuration": 30,
+    "timerDuration": 15,
     "defaultSpeed": 1.0,
     "minSpeed": 0.5,
     "maxSpeed": 2.0,

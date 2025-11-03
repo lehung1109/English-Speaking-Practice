@@ -71,6 +71,17 @@
         "What's your favorite place?",
         "What's your favorite thing to do?"
       ]
+    },
+    "7": {
+      "title": "ĐỐI TƯỢNG THÂN THIẾT",
+      "questions": [
+        "What's your best friend's name?",
+        "What's your best friend's age?",
+        "What's your best friend's favorite color?",
+        "What's your best friend's favorite food?",
+        "What's your best friend's favorite day?",
+        "What's your best friend's favorite time?"
+      ]
     }
   },
   "settings": {

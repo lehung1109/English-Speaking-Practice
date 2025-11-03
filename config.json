@@ -60,6 +60,17 @@
         "How do you usually go to the park?",
         "How do you usually go to the library?"
       ]
+    },
+    "6": {
+      "title": "NGÀY TỐT NHẤT CỦA BẠN",
+      "questions": [
+        "What's your favorite color?",
+        "What's your favorite food?",
+        "What's your favorite day?",
+        "What's your favorite time?",
+        "What's your favorite place?",
+        "What's your favorite thing to do?"
+      ]
     }
   },
   "settings": {

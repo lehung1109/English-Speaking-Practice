@@ -307,8 +307,7 @@ function replayQuestion() {
 
   const question = currentLesson.questions[currentQuestionIndex];
   
-  // Stop timer and current speech
-  stopTimer();
+  // Only stop current speech, keep timer running
   synth.cancel();
 
   // Update status indicator
@@ -320,8 +319,10 @@ function replayQuestion() {
   speak(question)
     .then(() => {
       if (isRunning && !isPaused) {
-        // Resume timer if practice is running
-        startTimer();
+        // Timer is still running, just update status
+        statusIndicator.className = "status-indicator status-waiting";
+        statusIndicator.textContent =
+          "⏱️ Thời gian trả lời - Hãy nói câu trả lời của bạn!";
       } else {
         // If not running, just show waiting status
         statusIndicator.className = "status-indicator status-waiting";

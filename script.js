@@ -30,6 +30,9 @@ const restartBtn = document.getElementById("restartBtn");
 const voiceSelect = document.getElementById("voiceSelect");
 const speedControl = document.getElementById("speedControl");
 const speedValue = document.getElementById("speedValue");
+const navigationControls = document.getElementById("navigationControls");
+const prevBtn = document.getElementById("prevBtn");
+const nextBtn = document.getElementById("nextBtn");
 
 // Load config from JSON file
 async function loadConfig() {
@@ -211,10 +214,13 @@ function resetPractice() {
   timerValue.classList.remove("warning");
   statusIndicator.style.display = "none";
   completionMessage.style.display = "none";
+  navigationControls.style.display = "none";
 
   startBtn.disabled = false;
   pauseBtn.disabled = true;
   stopBtn.disabled = true;
+  prevBtn.disabled = true;
+  nextBtn.disabled = true;
 
   updateProgress();
 }
@@ -260,6 +266,9 @@ function showQuestion() {
     currentLesson.questions.length
   }`;
   questionText.textContent = question;
+
+  // Update navigation buttons state
+  updateNavigationButtons();
 
   statusIndicator.style.display = "block";
   statusIndicator.className = "status-indicator status-speaking";
@@ -313,14 +322,39 @@ function stopTimer() {
 }
 
 function nextQuestion() {
-  currentQuestionIndex++;
-  updateProgress();
-
-  if (currentQuestionIndex >= currentLesson.questions.length) {
-    completeLesson();
+  if (currentQuestionIndex < currentLesson.questions.length - 1) {
+    currentQuestionIndex++;
+    stopTimer();
+    synth.cancel();
+    updateProgress();
+    showQuestion();
   } else {
+    completeLesson();
+  }
+}
+
+function previousQuestion() {
+  if (currentQuestionIndex > 0) {
+    currentQuestionIndex--;
+    stopTimer();
+    synth.cancel();
+    updateProgress();
     showQuestion();
   }
+}
+
+function updateNavigationButtons() {
+  if (!currentLesson || !currentLesson.questions) {
+    return;
+  }
+
+  const totalQuestions = currentLesson.questions.length;
+  
+  // Enable/disable Previous button
+  prevBtn.disabled = currentQuestionIndex === 0;
+  
+  // Enable/disable Next button
+  nextBtn.disabled = currentQuestionIndex >= totalQuestions - 1;
 }
 
 function completeLesson() {
@@ -331,12 +365,15 @@ function completeLesson() {
   document.querySelector(".question-display").style.display = "none";
   document.querySelector(".timer-display").style.display = "none";
   document.querySelector(".controls").style.display = "none";
+  navigationControls.style.display = "none";
   statusIndicator.style.display = "none";
   completionMessage.style.display = "block";
 
   startBtn.disabled = false;
   pauseBtn.disabled = true;
   stopBtn.disabled = true;
+  prevBtn.disabled = true;
+  nextBtn.disabled = true;
 }
 
 // Control buttons
@@ -349,6 +386,7 @@ startBtn.addEventListener("click", () => {
     document.querySelector(".question-display").style.display = "flex";
     document.querySelector(".timer-display").style.display = "block";
     document.querySelector(".controls").style.display = "flex";
+    navigationControls.style.display = "flex";
     completionMessage.style.display = "none";
 
     startBtn.disabled = true;
@@ -391,5 +429,18 @@ stopBtn.addEventListener("click", () => {
 
 restartBtn.addEventListener("click", () => {
   resetPractice();
+});
+
+// Navigation buttons
+prevBtn.addEventListener("click", () => {
+  if (!prevBtn.disabled) {
+    previousQuestion();
+  }
+});
+
+nextBtn.addEventListener("click", () => {
+  if (!nextBtn.disabled) {
+    nextQuestion();
+  }
 });
 

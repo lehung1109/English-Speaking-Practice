@@ -227,6 +227,14 @@ h1 {
   margin-bottom: 30px;
 }
 
+.navigation-controls {
+  display: flex;
+  gap: 15px;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-bottom: 30px;
+}
+
 .control-btn {
   padding: 15px 40px;
   font-size: 1.1em;
@@ -272,6 +280,32 @@ h1 {
   opacity: 0.5;
   cursor: not-allowed;
   transform: none;
+}
+
+.btn-nav {
+  background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+  color: white;
+}
+
+.btn-nav:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 15px rgba(52, 152, 219, 0.4);
+}
+
+.btn-prev {
+  background: linear-gradient(135deg, #9b59b6 0%, #8e44ad 100%);
+}
+
+.btn-prev:hover:not(:disabled) {
+  box-shadow: 0 6px 15px rgba(155, 89, 182, 0.4);
+}
+
+.btn-next {
+  background: linear-gradient(135deg, #16a085 0%, #138d75 100%);
+}
+
+.btn-next:hover:not(:disabled) {
+  box-shadow: 0 6px 15px rgba(22, 160, 133, 0.4);
 }
 
 .voice-controls {

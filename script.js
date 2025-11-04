@@ -33,6 +33,7 @@ const speedValue = document.getElementById("speedValue");
 const navigationControls = document.getElementById("navigationControls");
 const prevBtn = document.getElementById("prevBtn");
 const nextBtn = document.getElementById("nextBtn");
+const replayBtn = document.getElementById("replayBtn");
 
 // Load config from JSON file
 async function loadConfig() {
@@ -215,6 +216,10 @@ function resetPractice() {
   statusIndicator.style.display = "none";
   completionMessage.style.display = "none";
   navigationControls.style.display = "none";
+  
+  if (replayBtn) {
+    replayBtn.style.display = "none";
+  }
 
   startBtn.disabled = false;
   pauseBtn.disabled = true;
@@ -267,6 +272,11 @@ function showQuestion() {
   }`;
   questionText.textContent = question;
 
+  // Show replay button when question is displayed
+  if (replayBtn) {
+    replayBtn.style.display = "block";
+  }
+
   // Update navigation buttons state
   updateNavigationButtons();
 
@@ -285,6 +295,41 @@ function showQuestion() {
       if (isRunning && !isPaused) {
         startTimer();
       }
+    });
+}
+
+function replayQuestion() {
+  if (!currentLesson || !currentLesson.questions || currentQuestionIndex < 0) {
+    return;
+  }
+
+  const question = currentLesson.questions[currentQuestionIndex];
+  
+  // Stop timer and current speech
+  stopTimer();
+  synth.cancel();
+
+  // Update status indicator
+  statusIndicator.style.display = "block";
+  statusIndicator.className = "status-indicator status-speaking";
+  statusIndicator.textContent = "🔊 Đang đọc lại câu hỏi...";
+
+  // Speak the question again
+  speak(question)
+    .then(() => {
+      if (isRunning && !isPaused) {
+        // Resume timer if practice is running
+        startTimer();
+      } else {
+        // If not running, just show waiting status
+        statusIndicator.className = "status-indicator status-waiting";
+        statusIndicator.textContent = "✅ Đã đọc xong";
+      }
+    })
+    .catch((error) => {
+      console.error("Speech error:", error);
+      statusIndicator.className = "status-indicator status-waiting";
+      statusIndicator.textContent = "❌ Lỗi khi đọc câu hỏi";
     });
 }
 
@@ -368,6 +413,10 @@ function completeLesson() {
   navigationControls.style.display = "none";
   statusIndicator.style.display = "none";
   completionMessage.style.display = "block";
+  
+  if (replayBtn) {
+    replayBtn.style.display = "none";
+  }
 
   startBtn.disabled = false;
   pauseBtn.disabled = true;
@@ -442,5 +491,10 @@ nextBtn.addEventListener("click", () => {
   if (!nextBtn.disabled) {
     nextQuestion();
   }
+});
+
+// Replay button
+replayBtn.addEventListener("click", () => {
+  replayQuestion();
 });
 

@@ -32,7 +32,7 @@
         "Are your colleagues friendly?",
         "Is your boss easy-going?",
         "What do you do at work?",
-        "How many days off do you have a week?",
+        "How many days off a week do you have?",
         "What days do you work?",
         "What time do you start work?",
         "What time do you get off work?",
@@ -65,15 +65,42 @@
         "How much does he weigh?",
         "What’s he like?",
         "Is he gentle?",
+        "Does he usually help you with housework?",
         "What are his hobbies?",
         "How many siblings do you have?",
+        "Do you have any siblings?",
         "Do you often visit your parents?",
         "How often do you go to your hometown?"
+      ]
+    },
+    "4": {
+      "title": "DAILY ROUTINES",
+      "questions": [
+        "What time do you usually get up?",
+        "Do you exercise regularly?",
+        "What sports do you play?",
+        "Do you do yoga?",
+        "When do you do yoga?",
+        "Where do you do yoga?",
+        "How much does yoga cost per month?",
+        "Do you usually have breakfast?",
+        "What time do you go to work?",
+        "Do you bring lunch to work?",
+        "Do you usually bring lunch or eat out?",
+        "Do you take a nap every day?",
+        "What time do you usually get home?",
+        "What do you usually do in the evening?",
+        "What time do you usually go to bed?",
+        "Do you often stay up late?",
+        "Do you often sleep in on the weekend?",
+        "Do you often hang out with your friends?",
+        "Do you often go to the coffee shop?",
+        "What do you usually do on the weekend?"
       ]
     }
   },
   "settings": {
-    "timerDuration": 15,
+    "timerDuration": 40,
     "defaultSpeed": 1.0,
     "minSpeed": 0.5,
     "maxSpeed": 2.0,

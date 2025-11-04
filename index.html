@@ -69,6 +69,9 @@
           <div class="question-text" id="questionText">
             Nhấn Start để bắt đầu
           </div>
+          <button class="replay-btn" id="replayBtn" style="display: none;" title="Nghe lại câu hỏi">
+            🔄 Nghe lại
+          </button>
         </div>
 
         <div class="timer-display">
@@ -78,11 +81,20 @@
 
         <div class="controls">
           <button class="control-btn btn-start" id="startBtn">▶️ Start</button>
-          <button class="control-btn btn-pause" id="pauseBtn" disabled>
+          <button class="control-btn btn-pause" id="pauseBtn" style="display: none;" disabled>
             ⏸️ Pause
           </button>
-          <button class="control-btn btn-stop" id="stopBtn" disabled>
+          <button class="control-btn btn-stop" id="stopBtn" style="display: none;" disabled>
             ⏹️ Stop
+          </button>
+        </div>
+
+        <div class="navigation-controls" id="navigationControls" style="display: none;">
+          <button class="control-btn btn-nav btn-prev" id="prevBtn" disabled>
+            ⬅️ Câu trước
+          </button>
+          <button class="control-btn btn-nav btn-next" id="nextBtn" disabled>
+            Câu tiếp ➡️
           </button>
         </div>
 

@@ -221,9 +221,11 @@ function resetPractice() {
     replayBtn.style.display = "none";
   }
 
+  // Show Start button, hide Pause and Stop buttons
+  startBtn.style.display = "block";
+  pauseBtn.style.display = "none";
+  stopBtn.style.display = "none";
   startBtn.disabled = false;
-  pauseBtn.disabled = true;
-  stopBtn.disabled = true;
   prevBtn.disabled = true;
   nextBtn.disabled = true;
 
@@ -418,9 +420,11 @@ function completeLesson() {
     replayBtn.style.display = "none";
   }
 
+  // Show Start button, hide Pause and Stop buttons
+  startBtn.style.display = "block";
+  pauseBtn.style.display = "none";
+  stopBtn.style.display = "none";
   startBtn.disabled = false;
-  pauseBtn.disabled = true;
-  stopBtn.disabled = true;
   prevBtn.disabled = true;
   nextBtn.disabled = true;
 }
@@ -438,7 +442,10 @@ startBtn.addEventListener("click", () => {
     navigationControls.style.display = "flex";
     completionMessage.style.display = "none";
 
-    startBtn.disabled = true;
+    // Hide Start button, show Pause and Stop buttons
+    startBtn.style.display = "none";
+    pauseBtn.style.display = "block";
+    stopBtn.style.display = "block";
     pauseBtn.disabled = false;
     stopBtn.disabled = false;
 

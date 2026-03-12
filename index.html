@@ -34,13 +34,20 @@
       <div class="practice-area">
         <div class="voice-controls">
           <div class="voice-control-group">
-            <label>🔊 Chọn giọng đọc (Ưu tiên giọng Mỹ 🇺🇸):</label>
+            <label for="languageSelect">🌐 Ngôn ngữ luyện nói:</label>
+            <select id="languageSelect">
+              <option value="en" selected>English (EN)</option>
+              <option value="vi">Tiếng Việt (VI)</option>
+            </select>
+          </div>
+          <div class="voice-control-group">
+            <label id="voiceSelectLabel" for="voiceSelect">🔊 Chọn giọng đọc (Ưu tiên giọng Mỹ 🇺🇸):</label>
             <select id="voiceSelect">
               <option>Đang tải giọng đọc...</option>
             </select>
           </div>
           <div class="voice-control-group">
-            <label>⚡ Tốc độ đọc: <span id="speedValue">1.0x</span></label>
+            <label for="speedControl">⚡ Tốc độ đọc: <span id="speedValue">1.0x</span></label>
             <input
               type="range"
               id="speedControl"
@@ -64,48 +71,72 @@
 
         <div class="status-indicator" id="statusIndicator"></div>
 
-        <div class="question-display" id="questionDisplay">
-          <div class="question-number" id="questionNumber"></div>
-          <div class="question-text" id="questionText">
-            Nhấn Start để bắt đầu
+        <div class="practice-layout">
+          <div class="practice-main">
+            <div class="question-display" id="questionDisplay">
+              <div class="question-number" id="questionNumber"></div>
+              <div class="question-text" id="questionText">
+                Nhấn Start để bắt đầu
+              </div>
+              <button class="replay-btn" id="replayBtn" style="display: none;" title="Nghe lại câu hỏi">
+                🔄 Nghe lại
+              </button>
+
+              <div class="answer-section" id="answerSection" style="display: none;">
+                <label for="answerInput" class="answer-label">✍️ Câu trả lời của bạn:</label>
+                <textarea
+                  id="answerInput"
+                  class="answer-input"
+                  rows="3"
+                  placeholder="Nhập câu trả lời của bạn ở đây..."
+                ></textarea>
+                <div class="answer-actions">
+                  <button class="save-answer-btn" id="saveAnswerBtn" type="button">
+                    Trả lời
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <div class="timer-display">
+              <div class="timer-label">Thời gian còn lại</div>
+              <div class="timer-value" id="timerValue">50</div>
+            </div>
+
+            <div class="controls">
+              <button class="control-btn btn-start" id="startBtn">▶️ Start</button>
+              <button class="control-btn btn-pause" id="pauseBtn" style="display: none;" disabled>
+                ⏸️ Pause
+              </button>
+              <button class="control-btn btn-stop" id="stopBtn" style="display: none;" disabled>
+                ⏹️ Stop
+              </button>
+            </div>
+
+            <div class="navigation-controls" id="navigationControls" style="display: none;">
+              <button class="control-btn btn-nav btn-prev" id="prevBtn" disabled>
+                ⬅️ Câu trước
+              </button>
+              <button class="control-btn btn-nav btn-next" id="nextBtn" disabled>
+                Câu tiếp ➡️
+              </button>
+            </div>
+
+            <div
+              class="completion-message"
+              id="completionMessage"
+              style="display: none"
+            >
+              <h2>🎉 Xuất sắc!</h2>
+              <p>Bạn đã hoàn thành bài học!</p>
+              <button class="restart-btn" id="restartBtn">🔄 Làm lại</button>
+            </div>
           </div>
-          <button class="replay-btn" id="replayBtn" style="display: none;" title="Nghe lại câu hỏi">
-            🔄 Nghe lại
-          </button>
         </div>
 
-        <div class="timer-display">
-          <div class="timer-label">Thời gian còn lại</div>
-          <div class="timer-value" id="timerValue">50</div>
-        </div>
-
-        <div class="controls">
-          <button class="control-btn btn-start" id="startBtn">▶️ Start</button>
-          <button class="control-btn btn-pause" id="pauseBtn" style="display: none;" disabled>
-            ⏸️ Pause
-          </button>
-          <button class="control-btn btn-stop" id="stopBtn" style="display: none;" disabled>
-            ⏹️ Stop
-          </button>
-        </div>
-
-        <div class="navigation-controls" id="navigationControls" style="display: none;">
-          <button class="control-btn btn-nav btn-prev" id="prevBtn" disabled>
-            ⬅️ Câu trước
-          </button>
-          <button class="control-btn btn-nav btn-next" id="nextBtn" disabled>
-            Câu tiếp ➡️
-          </button>
-        </div>
-
-        <div
-          class="completion-message"
-          id="completionMessage"
-          style="display: none"
-        >
-          <h2>🎉 Xuất sắc!</h2>
-          <p>Bạn đã hoàn thành bài học!</p>
-          <button class="restart-btn" id="restartBtn">🔄 Làm lại</button>
+        <div class="completed-section" id="completedSection" style="display: none;">
+          <h3 id="completedTitle">📌 Câu đã trả lời</h3>
+          <div class="completed-list" id="completedList"></div>
         </div>
       </div>
     </div>

@@ -40,8 +40,10 @@ const replayBtn = document.getElementById("replayBtn");
 const answerSection = document.getElementById("answerSection");
 const answerInput = document.getElementById("answerInput");
 const saveAnswerBtn = document.getElementById("saveAnswerBtn");
+const nextInlineBtn = document.getElementById("nextInlineBtn");
 const completedSection = document.getElementById("completedSection");
 const completedList = document.getElementById("completedList");
+const completedTitle = document.getElementById("completedTitle");
 
 const ANSWERS_STORAGE_KEY = "esp_answers_v1";
 let answersByKey = {};
@@ -111,10 +113,14 @@ function renderCompletedList() {
   if (!items.length) {
     completedSection.style.display = "none";
     completedList.innerHTML = "";
+    if (completedTitle) completedTitle.textContent = "📌 Câu đã trả lời";
     return;
   }
 
   completedSection.style.display = "block";
+  if (completedTitle) {
+    completedTitle.textContent = `📌 Câu đã trả lời (${items.length}/${questions.length})`;
+  }
   completedList.innerHTML = items
     .map(
       (it) => `
@@ -412,6 +418,7 @@ function resetPractice() {
   navigationControls.style.display = "none";
   if (answerSection) answerSection.style.display = "none";
   if (answerInput) answerInput.value = "";
+  if (nextInlineBtn) nextInlineBtn.disabled = true;
   if (completedSection) completedSection.style.display = "none";
   if (completedList) completedList.innerHTML = "";
   
@@ -641,6 +648,9 @@ function completeLesson() {
   if (answerSection) {
     answerSection.style.display = "none";
   }
+  if (nextInlineBtn) {
+    nextInlineBtn.disabled = true;
+  }
   if (completedSection) {
     // keep the completed list visible after finishing
     renderCompletedList();
@@ -672,6 +682,7 @@ startBtn.addEventListener("click", () => {
     completionMessage.style.display = "none";
     if (answerSection) answerSection.style.display = "block";
     if (answerInput) answerInput.value = "";
+    if (nextInlineBtn) nextInlineBtn.disabled = false;
     renderCompletedList();
 
     // Hide Start button, show Pause and Stop buttons
@@ -700,7 +711,16 @@ saveAnswerBtn?.addEventListener("click", () => {
   setSavedAnswer(currentQuestionIndex, value);
   renderCompletedList();
 
-  // Continue to next question automatically (keeps the flow)
+  statusIndicator.style.display = "block";
+  statusIndicator.className = "status-indicator status-speaking";
+  statusIndicator.textContent =
+    currentLanguage === "vi"
+      ? "✅ Đã lưu câu trả lời. Bạn có thể bấm “Câu tiếp”."
+      : "✅ Saved. You can click “Next”.";
+});
+
+nextInlineBtn?.addEventListener("click", () => {
+  if (!isRunning) return;
   stopTimer();
   nextQuestion();
 });

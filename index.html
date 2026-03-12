@@ -90,9 +90,14 @@
                   rows="3"
                   placeholder="Nhập câu trả lời của bạn ở đây..."
                 ></textarea>
-                <button class="save-answer-btn" id="saveAnswerBtn" type="button">
-                  Trả lời
-                </button>
+                <div class="answer-actions">
+                  <button class="save-answer-btn" id="saveAnswerBtn" type="button">
+                    Trả lời
+                  </button>
+                  <button class="save-answer-btn btn-secondary" id="nextInlineBtn" type="button">
+                    Câu tiếp ➡️
+                  </button>
+                </div>
               </div>
             </div>
 
@@ -130,13 +135,11 @@
               <button class="restart-btn" id="restartBtn">🔄 Làm lại</button>
             </div>
           </div>
+        </div>
 
-          <aside class="practice-side">
-            <div class="completed-section" id="completedSection" style="display: none;">
-              <h3>📌 Câu đã trả lời</h3>
-              <div class="completed-list" id="completedList"></div>
-            </div>
-          </aside>
+        <div class="completed-section" id="completedSection" style="display: none;">
+          <h3 id="completedTitle">📌 Câu đã trả lời</h3>
+          <div class="completed-list" id="completedList"></div>
         </div>
       </div>
     </div>

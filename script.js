@@ -711,12 +711,9 @@ saveAnswerBtn?.addEventListener("click", () => {
   setSavedAnswer(currentQuestionIndex, value);
   renderCompletedList();
 
-  statusIndicator.style.display = "block";
-  statusIndicator.className = "status-indicator status-speaking";
-  statusIndicator.textContent =
-    currentLanguage === "vi"
-      ? "✅ Đã lưu câu trả lời. Bạn có thể bấm “Câu tiếp”."
-      : "✅ Saved. You can click “Next”.";
+  // Auto-advance to the next question after saving
+  stopTimer();
+  nextQuestion();
 });
 
 nextInlineBtn?.addEventListener("click", () => {

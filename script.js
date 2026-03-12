@@ -84,6 +84,18 @@ function setSavedAnswer(index, answer) {
   persistAnswers();
 }
 
+function clearAnswersForCurrentLesson() {
+  const prefix = `${getLessonKey()}|q`;
+  let changed = false;
+  Object.keys(answersByKey).forEach((k) => {
+    if (k.startsWith(prefix)) {
+      delete answersByKey[k];
+      changed = true;
+    }
+  });
+  if (changed) persistAnswers();
+}
+
 function renderCompletedList() {
   if (!completedSection || !completedList || !currentLesson) return;
 
@@ -650,12 +662,17 @@ startBtn.addEventListener("click", () => {
     isPaused = false;
     currentQuestionIndex = 0;
 
+    // Reset "Câu đã trả lời" when starting a new lesson run
+    clearAnswersForCurrentLesson();
+
     document.querySelector(".question-display").style.display = "flex";
     document.querySelector(".timer-display").style.display = "block";
     document.querySelector(".controls").style.display = "flex";
     navigationControls.style.display = "flex";
     completionMessage.style.display = "none";
     if (answerSection) answerSection.style.display = "block";
+    if (answerInput) answerInput.value = "";
+    renderCompletedList();
 
     // Hide Start button, show Pause and Stop buttons
     startBtn.style.display = "none";

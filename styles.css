@@ -187,6 +187,96 @@ h1 {
   transform: translateY(0);
 }
 
+.answer-section {
+  margin-top: 22px;
+  text-align: left;
+}
+
+.answer-label {
+  display: block;
+  font-weight: 700;
+  margin-bottom: 8px;
+  color: rgba(255, 255, 255, 0.95);
+}
+
+.answer-input {
+  width: 100%;
+  border-radius: 12px;
+  border: 2px solid rgba(255, 255, 255, 0.35);
+  background: rgba(255, 255, 255, 0.15);
+  color: white;
+  caret-color: #ffffff;
+  padding: 12px 14px;
+  font-size: 1em;
+  outline: none;
+  resize: vertical;
+  backdrop-filter: blur(10px);
+}
+
+.answer-input::placeholder {
+  color: rgba(255, 255, 255, 0.75);
+}
+
+.answer-input:focus {
+  border-color: rgba(255, 255, 255, 0.7);
+}
+
+.save-answer-btn {
+  margin-top: 12px;
+  padding: 12px 18px;
+  width: 100%;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  font-weight: 800;
+  font-size: 1.05em;
+  color: #155724;
+  background: linear-gradient(135deg, #d4edda 0%, #b7f0c1 100%);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.18);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.save-answer-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.22);
+}
+
+.completed-section {
+  margin-top: 20px;
+  background: #f8f9fa;
+  border-radius: 12px;
+  padding: 18px;
+  border: 1px solid #eee;
+}
+
+.completed-section h3 {
+  color: #667eea;
+  margin-bottom: 12px;
+}
+
+.completed-item {
+  background: white;
+  border-radius: 10px;
+  padding: 12px 14px;
+  border: 1px solid #eee;
+  margin-bottom: 10px;
+}
+
+.completed-item:last-child {
+  margin-bottom: 0;
+}
+
+.completed-q {
+  font-weight: 800;
+  color: #333;
+  margin-bottom: 6px;
+}
+
+.completed-a {
+  color: #555;
+  white-space: pre-wrap;
+}
+
 .timer-display {
   background: white;
   padding: 30px;

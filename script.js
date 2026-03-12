@@ -37,6 +37,92 @@ const navigationControls = document.getElementById("navigationControls");
 const prevBtn = document.getElementById("prevBtn");
 const nextBtn = document.getElementById("nextBtn");
 const replayBtn = document.getElementById("replayBtn");
+const answerSection = document.getElementById("answerSection");
+const answerInput = document.getElementById("answerInput");
+const saveAnswerBtn = document.getElementById("saveAnswerBtn");
+const completedSection = document.getElementById("completedSection");
+const completedList = document.getElementById("completedList");
+
+const ANSWERS_STORAGE_KEY = "esp_answers_v1";
+let answersByKey = {};
+
+function loadSavedAnswers() {
+  try {
+    const raw = localStorage.getItem(ANSWERS_STORAGE_KEY);
+    answersByKey = raw ? JSON.parse(raw) : {};
+  } catch {
+    answersByKey = {};
+  }
+}
+
+function persistAnswers() {
+  try {
+    localStorage.setItem(ANSWERS_STORAGE_KEY, JSON.stringify(answersByKey));
+  } catch {
+    // ignore storage quota / privacy mode issues
+  }
+}
+
+function getLessonKey() {
+  const lessonNum =
+    currentLesson && typeof currentLesson === "object"
+      ? Object.keys(lessons).find((k) => lessons[k] === currentLesson)
+      : null;
+  return lessonNum ? `${currentLanguage}|${lessonNum}` : `${currentLanguage}|unknown`;
+}
+
+function getQuestionKey(index) {
+  return `${getLessonKey()}|q${index}`;
+}
+
+function getSavedAnswer(index) {
+  return answersByKey[getQuestionKey(index)] || "";
+}
+
+function setSavedAnswer(index, answer) {
+  answersByKey[getQuestionKey(index)] = answer;
+  persistAnswers();
+}
+
+function renderCompletedList() {
+  if (!completedSection || !completedList || !currentLesson) return;
+
+  const questions = getCurrentQuestions();
+  const items = [];
+  for (let i = 0; i < questions.length; i++) {
+    const a = getSavedAnswer(i).trim();
+    if (!a) continue;
+    items.push({ index: i, question: questions[i], answer: a });
+  }
+
+  // Only show when there is at least one saved answer.
+  if (!items.length) {
+    completedSection.style.display = "none";
+    completedList.innerHTML = "";
+    return;
+  }
+
+  completedSection.style.display = "block";
+  completedList.innerHTML = items
+    .map(
+      (it) => `
+        <div class="completed-item">
+          <div class="completed-q">${it.index + 1}. ${escapeHtml(it.question)}</div>
+          <div class="completed-a">${escapeHtml(it.answer)}</div>
+        </div>
+      `
+    )
+    .join("");
+}
+
+function escapeHtml(str) {
+  return String(str)
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#039;");
+}
 
 function getCurrentQuestions() {
   if (!currentLesson) {
@@ -100,6 +186,8 @@ async function loadConfig() {
     // Initialize voices based on selected language
     updateVoiceLabel();
     loadVoices();
+
+    loadSavedAnswers();
 
     console.log("Config loaded successfully");
   } catch (error) {
@@ -310,6 +398,10 @@ function resetPractice() {
   statusIndicator.style.display = "none";
   completionMessage.style.display = "none";
   navigationControls.style.display = "none";
+  if (answerSection) answerSection.style.display = "none";
+  if (answerInput) answerInput.value = "";
+  if (completedSection) completedSection.style.display = "none";
+  if (completedList) completedList.innerHTML = "";
   
   if (replayBtn) {
     replayBtn.style.display = "none";
@@ -380,6 +472,10 @@ function showQuestion() {
     questions.length
   }`;
   questionText.textContent = question;
+
+  // Always reset the input when moving to a new question
+  if (answerInput) answerInput.value = "";
+  renderCompletedList();
 
   // Show replay button when question is displayed
   if (replayBtn) {
@@ -530,6 +626,13 @@ function completeLesson() {
   if (replayBtn) {
     replayBtn.style.display = "none";
   }
+  if (answerSection) {
+    answerSection.style.display = "none";
+  }
+  if (completedSection) {
+    // keep the completed list visible after finishing
+    renderCompletedList();
+  }
 
   // Show Start button, hide Pause and Stop buttons
   startBtn.style.display = "block";
@@ -552,6 +655,7 @@ startBtn.addEventListener("click", () => {
     document.querySelector(".controls").style.display = "flex";
     navigationControls.style.display = "flex";
     completionMessage.style.display = "none";
+    if (answerSection) answerSection.style.display = "block";
 
     // Hide Start button, show Pause and Stop buttons
     startBtn.style.display = "none";
@@ -563,6 +667,25 @@ startBtn.addEventListener("click", () => {
     updateProgress();
     showQuestion();
   }
+});
+
+saveAnswerBtn?.addEventListener("click", () => {
+  if (!currentLesson) return;
+  const questions = getCurrentQuestions();
+  if (!questions.length) return;
+
+  const value = (answerInput?.value || "").trim();
+  if (!value) {
+    alert(currentLanguage === "vi" ? "Vui lòng nhập câu trả lời." : "Please enter an answer.");
+    return;
+  }
+
+  setSavedAnswer(currentQuestionIndex, value);
+  renderCompletedList();
+
+  // Continue to next question automatically (keeps the flow)
+  stopTimer();
+  nextQuestion();
 });
 
 pauseBtn.addEventListener("click", () => {

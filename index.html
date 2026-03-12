@@ -79,6 +79,19 @@
           <button class="replay-btn" id="replayBtn" style="display: none;" title="Nghe lại câu hỏi">
             🔄 Nghe lại
           </button>
+
+          <div class="answer-section" id="answerSection" style="display: none;">
+            <label for="answerInput" class="answer-label">✍️ Câu trả lời của bạn:</label>
+            <textarea
+              id="answerInput"
+              class="answer-input"
+              rows="3"
+              placeholder="Nhập câu trả lời của bạn ở đây..."
+            ></textarea>
+            <button class="save-answer-btn" id="saveAnswerBtn" type="button">
+              Trả lời
+            </button>
+          </div>
         </div>
 
         <div class="timer-display">
@@ -103,6 +116,11 @@
           <button class="control-btn btn-nav btn-next" id="nextBtn" disabled>
             Câu tiếp ➡️
           </button>
+        </div>
+
+        <div class="completed-section" id="completedSection" style="display: none;">
+          <h3>📌 Câu đã trả lời</h3>
+          <div class="completed-list" id="completedList"></div>
         </div>
 
         <div

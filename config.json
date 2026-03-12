@@ -1,7 +1,7 @@
 {
   "lessons": {
     "1": {
-      "title": "BẢN THÂN",
+      "title": "BẢN THÂN ",
       "questions": [
         "What's your name?",
         "How old are you?",
@@ -17,7 +17,16 @@
         "How often do you travel?",
         "Do you like watching movies?",
         "What kind of movies do you like?",
-        "What do you like to do when you have free time?"
+        "What do you like to do when you have free time?",
+        "Where do you work?"
+      ],
+      "questions_vi": [
+        "Tên bạn là gì?",
+        "Bạn bao nhiêu tuổi?",
+        "Bạn đến từ đâu?",
+        "Bạn đang sống ở đâu?",
+        "Bạn làm nghề gì?",
+        "Bạn làm việc ở đâu?"
       ]
     },
     "2": {
@@ -38,6 +47,23 @@
         "Do you work the night shift?",
         "How far is it from your house to your workplace?",
         "How long does it take you to get to your workplace?"
+      ],
+      "questions_vi": [
+        "Bạn đi làm hay đi học?",
+        "Bạn làm nghề gì?",
+        "Bạn làm việc ở đâu?",
+        "Bạn làm ở bộ phận nào?",
+        "Bộ phận của bạn có bao nhiêu người?",
+        "Đồng nghiệp của bạn có thân thiện không?",
+        "Sếp của bạn có dễ tính không?",
+        "Bạn làm những công việc gì ở chỗ làm?",
+        "Bạn có mấy ngày nghỉ trong một tuần?",
+        "Bạn làm việc những ngày nào?",
+        "Bạn bắt đầu làm việc lúc mấy giờ?",
+        "Bạn tan làm lúc mấy giờ?",
+        "Bạn có làm ca đêm không?",
+        "Từ nhà bạn đến nơi làm việc bao xa?",
+        "Bạn mất bao lâu để đi đến nơi làm việc?"
       ]
     },
     "3": {
@@ -69,7 +95,15 @@
         "How many siblings do you have?",
         "Do you have any siblings?",
         "Do you often visit your parents?",
-        "How often do you go to your hometown?"
+        "How often do you go to your hometown?",
+        "Do you have a family?",
+        "How many people are there in your family?",
+        "What's your family's name?"
+      ],
+      "questions_vi": [
+        "Bạn có gia đình chưa?",
+        "Gia đình bạn có bao nhiêu người?",
+        "Họ của bạn là gì?"
       ]
     },
     "4": {
@@ -94,12 +128,27 @@
         "Do you often sleep in on the weekend?",
         "Do you often hang out with your friends?",
         "Do you often go to the coffee shop?",
-        "What do you usually do on the weekend?"
+        "What do you usually do on the weekend?",
+        "What's your favorite color?",
+        "What's your favorite food?",
+        "What's your favorite animal?",
+        "What's your favorite sport?",
+        "What's your favorite movie?",
+        "What's your favorite book?"
+      ],
+      "questions_vi": [
+        "Màu bạn thích nhất là gì?",
+        "Món ăn bạn thích nhất là gì?",
+        "Con vật bạn thích nhất là gì?",
+        "Môn thể thao bạn thích nhất là gì?",
+        "Bộ phim bạn thích nhất là gì?",
+        "Cuốn sách bạn thích nhất là gì?"
       ]
     }
   },
   "settings": {
-    "timerDuration": 40,
+    "timerDuration": 35,
+    "defaultLanguage": "vi",
     "defaultSpeed": 1.0,
     "minSpeed": 0.5,
     "maxSpeed": 2.0,

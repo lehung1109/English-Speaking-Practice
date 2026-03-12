@@ -8,10 +8,11 @@ let timer = null;
 let timeRemaining = 50;
 let isPaused = false;
 let isRunning = false;
-let synth = window.speechSynthesis;
+let synth = globalThis.speechSynthesis;
 let voices = [];
 let sortedVoices = [];
 let currentUtterance = null;
+let currentLanguage = "en"; // "en" | "vi"
 
 // Elements
 const lessonSelector = document.getElementById("lessonSelector");
@@ -27,13 +28,36 @@ const pauseBtn = document.getElementById("pauseBtn");
 const stopBtn = document.getElementById("stopBtn");
 const completionMessage = document.getElementById("completionMessage");
 const restartBtn = document.getElementById("restartBtn");
+const languageSelect = document.getElementById("languageSelect");
 const voiceSelect = document.getElementById("voiceSelect");
+const voiceSelectLabel = document.getElementById("voiceSelectLabel");
 const speedControl = document.getElementById("speedControl");
 const speedValue = document.getElementById("speedValue");
 const navigationControls = document.getElementById("navigationControls");
 const prevBtn = document.getElementById("prevBtn");
 const nextBtn = document.getElementById("nextBtn");
 const replayBtn = document.getElementById("replayBtn");
+
+function getCurrentQuestions() {
+  if (!currentLesson) {
+    return [];
+  }
+  if (currentLanguage === "vi") {
+    return currentLesson.questions_vi || [];
+  }
+  return currentLesson.questions || [];
+}
+
+function updateVoiceLabel() {
+  if (!voiceSelectLabel) {
+    return;
+  }
+  if (currentLanguage === "vi") {
+    voiceSelectLabel.textContent = "🔊 Chọn giọng đọc (Ưu tiên giọng Việt 🇻🇳):";
+  } else {
+    voiceSelectLabel.textContent = "🔊 Chọn giọng đọc (Ưu tiên giọng Mỹ 🇺🇸):";
+  }
+}
 
 // Load config from JSON file
 async function loadConfig() {
@@ -46,11 +70,18 @@ async function loadConfig() {
     lessons = config.lessons;
     settings = config.settings || {
       timerDuration: 50,
+      defaultLanguage: "en",
       defaultSpeed: 1.0,
       minSpeed: 0.5,
       maxSpeed: 2.0,
       speedStep: 0.1,
     };
+
+    // Initialize default language from config
+    currentLanguage = settings.defaultLanguage === "vi" ? "vi" : "en";
+    if (languageSelect) {
+      languageSelect.value = currentLanguage;
+    }
 
     // Initialize timer duration
     timeRemaining = settings.timerDuration;
@@ -65,6 +96,10 @@ async function loadConfig() {
 
     // Render lesson buttons dynamically
     renderLessonButtons();
+
+    // Initialize voices based on selected language
+    updateVoiceLabel();
+    loadVoices();
 
     console.log("Config loaded successfully");
   } catch (error) {
@@ -82,11 +117,20 @@ function renderLessonButtons() {
   lessonSelector.innerHTML = "";
 
   // Get lesson numbers and sort them
-  const lessonNumbers = Object.keys(lessons).sort((a, b) => parseInt(a) - parseInt(b));
+  const lessonNumbers = Object.keys(lessons).sort(
+    (a, b) => Number.parseInt(a, 10) - Number.parseInt(b, 10)
+  );
 
   lessonNumbers.forEach((lessonNum) => {
     const lesson = lessons[lessonNum];
-    const questionCount = lesson.questions ? lesson.questions.length : 0;
+    const questionsForLang =
+      currentLanguage === "vi" ? lesson.questions_vi : lesson.questions;
+    const questionCount = questionsForLang ? questionsForLang.length : 0;
+
+    // Only show lessons that have questions for the current language
+    if (questionCount === 0) {
+      return;
+    }
     
     const button = document.createElement("button");
     button.className = "lesson-btn";
@@ -94,7 +138,7 @@ function renderLessonButtons() {
     
     // Add emoji based on lesson number (or you can add emoji field to config.json later)
     const emojis = ["📝", "💼", "👨‍👩‍👧‍👦", "🎓", "🏠", "🍔", "🎮", "✈️"];
-    const emoji = emojis[parseInt(lessonNum) - 1] || "📚";
+    const emoji = emojis[Number.parseInt(lessonNum, 10) - 1] || "📚";
     
     button.innerHTML = `${emoji} BÀI ${lessonNum}: ${lesson.title}<br /><small>(${questionCount} câu hỏi)</small>`;
     
@@ -109,30 +153,61 @@ loadConfig();
 function loadVoices() {
   voices = synth.getVoices();
 
-  // Filter English voices and categorize by priority
-  const usVoices = [];
-  const ukVoices = [];
-  const otherEnVoices = [];
+  if (currentLanguage === "vi") {
+    // Filter Vietnamese voices and categorize by priority
+    const vnVoices = [];
+    const otherViVoices = [];
 
-  voices.forEach((voice) => {
-    if (voice.lang.startsWith("en-US")) {
-      usVoices.push(voice);
-    } else if (voice.lang.startsWith("en-GB")) {
-      ukVoices.push(voice);
-    } else if (voice.lang.startsWith("en")) {
-      otherEnVoices.push(voice);
-    }
-  });
+    voices.forEach((voice) => {
+      if (voice.lang.startsWith("vi-VN")) {
+        vnVoices.push(voice);
+      } else if (voice.lang.startsWith("vi")) {
+        otherViVoices.push(voice);
+      }
+    });
 
-  // Combine in priority order: US -> UK -> Other
-  sortedVoices = [...usVoices, ...ukVoices, ...otherEnVoices];
+    const viPriorityScore = (voice) => {
+      const name = (voice.name || "").toLowerCase();
+      // Windows Vietnamese voices commonly include "HoaiMy" (female) and "NamMinh" (male)
+      if (name.includes("hoaimy")) return 0;
+      if (name.includes("female") || name.includes("nữ") || name.includes("nu")) return 1;
+      if (name.includes("namminh") || name.includes("male") || name.includes("nam")) return 3;
+      return 2;
+    };
+
+    // Combine in priority order: vi-VN -> other vi*, then sort to put female voices first
+    sortedVoices = [...vnVoices, ...otherViVoices].sort(
+      (a, b) => viPriorityScore(a) - viPriorityScore(b)
+    );
+  } else {
+    // Filter English voices and categorize by priority
+    const usVoices = [];
+    const ukVoices = [];
+    const otherEnVoices = [];
+
+    voices.forEach((voice) => {
+      if (voice.lang.startsWith("en-US")) {
+        usVoices.push(voice);
+      } else if (voice.lang.startsWith("en-GB")) {
+        ukVoices.push(voice);
+      } else if (voice.lang.startsWith("en")) {
+        otherEnVoices.push(voice);
+      }
+    });
+
+    // Combine in priority order: US -> UK -> Other
+    sortedVoices = [...usVoices, ...ukVoices, ...otherEnVoices];
+  }
 
   // Populate select dropdown
   voiceSelect.innerHTML = "";
 
   if (sortedVoices.length === 0) {
-    voiceSelect.innerHTML =
-      "<option>No English voices available</option>";
+    voiceSelect.innerHTML = `<option>${
+      currentLanguage === "vi"
+        ? "Không có giọng Tiếng Việt khả dụng"
+        : "No English voices available"
+    }</option>`;
   } else {
     sortedVoices.forEach((voice, index) => {
       const option = document.createElement("option");
@@ -140,15 +215,18 @@ function loadVoices() {
 
       // Add badge based on voice type
       let badge = "";
-      if (voice.lang.startsWith("en-US")) {
-        badge = " 🇺🇸 [Recommended]";
-      } else if (voice.lang.startsWith("en-GB")) {
-        badge = " 🇬🇧";
+      if (currentLanguage === "vi") {
+        if (voice.lang.startsWith("vi-VN")) {
+          badge = " 🇻🇳 [Recommended]";
+        }
+      } else {
+        if (voice.lang.startsWith("en-US")) badge = " 🇺🇸 [Recommended]";
+        else if (voice.lang.startsWith("en-GB")) badge = " 🇬🇧";
       }
 
       option.textContent = `${voice.name} (${voice.lang})${badge}`;
 
-      // Auto-select first US voice (index 0 if available)
+      // Auto-select first prioritized voice (index 0 if available)
       if (index === 0) {
         option.selected = true;
       }
@@ -165,6 +243,22 @@ if (synth.onvoiceschanged !== undefined) {
 
 // Initial load
 setTimeout(loadVoices, 100);
+updateVoiceLabel();
+
+languageSelect?.addEventListener("change", (e) => {
+  const nextLang = e.target.value === "vi" ? "vi" : "en";
+  currentLanguage = nextLang;
+
+  updateVoiceLabel();
+  loadVoices();
+  renderLessonButtons();
+
+  // If a lesson is selected, reset the practice UI so questions match the language
+  if (currentLesson) {
+    resetPractice();
+    updateProgress();
+  }
+});
 
 speedControl.addEventListener("input", (e) => {
   speedValue.textContent = e.target.value + "x";
@@ -174,7 +268,7 @@ speedControl.addEventListener("input", (e) => {
 lessonSelector.addEventListener("click", (e) => {
   const btn = e.target.closest(".lesson-btn");
   if (btn) {
-    const lessonNum = parseInt(btn.dataset.lesson);
+    const lessonNum = Number.parseInt(btn.dataset.lesson, 10);
     selectLesson(lessonNum);
   }
 });
@@ -192,7 +286,7 @@ function selectLesson(lessonNum) {
   lessonBtns.forEach((btn) => {
     btn.classList.toggle(
       "active",
-      parseInt(btn.dataset.lesson) === lessonNum
+      Number.parseInt(btn.dataset.lesson, 10) === lessonNum
     );
   });
 
@@ -233,10 +327,11 @@ function resetPractice() {
 }
 
 function updateProgress() {
-  if (!currentLesson || !currentLesson.questions) {
+  const questions = getCurrentQuestions();
+  if (!questions.length) {
     return;
   }
-  const total = currentLesson.questions.length;
+  const total = questions.length;
   const current = currentQuestionIndex;
   const percentage = (current / total) * 100;
 
@@ -251,12 +346,15 @@ function speak(text) {
     currentUtterance = new SpeechSynthesisUtterance(text);
 
     // Use selected voice from prioritized list
-    const selectedIndex = parseInt(voiceSelect.value);
+    const selectedIndex = Number.parseInt(voiceSelect.value, 10);
     if (sortedVoices[selectedIndex]) {
       currentUtterance.voice = sortedVoices[selectedIndex];
+      currentUtterance.lang = sortedVoices[selectedIndex].lang;
+    } else {
+      currentUtterance.lang = currentLanguage === "vi" ? "vi-VN" : "en-US";
     }
 
-    currentUtterance.rate = parseFloat(speedControl.value);
+    currentUtterance.rate = Number.parseFloat(speedControl.value);
     currentUtterance.pitch = 1;
     currentUtterance.volume = 1;
 
@@ -268,9 +366,18 @@ function speak(text) {
 }
 
 function showQuestion() {
-  const question = currentLesson.questions[currentQuestionIndex];
+  const questions = getCurrentQuestions();
+  if (!questions.length) {
+    questionText.textContent =
+      currentLanguage === "vi"
+        ? "Bài này chưa có câu hỏi tiếng Việt."
+        : "This lesson has no questions.";
+    return;
+  }
+
+  const question = questions[currentQuestionIndex];
   questionNumber.textContent = `Câu hỏi ${currentQuestionIndex + 1}/${
-    currentLesson.questions.length
+    questions.length
   }`;
   questionText.textContent = question;
 
@@ -301,11 +408,12 @@ function showQuestion() {
 }
 
 function replayQuestion() {
-  if (!currentLesson || !currentLesson.questions || currentQuestionIndex < 0) {
+  const questions = getCurrentQuestions();
+  if (!questions.length || currentQuestionIndex < 0) {
     return;
   }
 
-  const question = currentLesson.questions[currentQuestionIndex];
+  const question = questions[currentQuestionIndex];
   
   // Only stop current speech, keep timer running
   synth.cancel();
@@ -370,7 +478,8 @@ function stopTimer() {
 }
 
 function nextQuestion() {
-  if (currentQuestionIndex < currentLesson.questions.length - 1) {
+  const questions = getCurrentQuestions();
+  if (currentQuestionIndex < questions.length - 1) {
     currentQuestionIndex++;
     stopTimer();
     synth.cancel();
@@ -392,11 +501,12 @@ function previousQuestion() {
 }
 
 function updateNavigationButtons() {
-  if (!currentLesson || !currentLesson.questions) {
+  const questions = getCurrentQuestions();
+  if (!questions.length) {
     return;
   }
 
-  const totalQuestions = currentLesson.questions.length;
+  const totalQuestions = questions.length;
   
   // Enable/disable Previous button
   prevBtn.disabled = currentQuestionIndex === 0;
